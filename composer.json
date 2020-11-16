@@ -1,0 +1,9 @@
+{
+    "name": "r4l/localize",
+    "type": "october-plugin",
+    "description": "Allow admins to override Plugin localization files from the backend UI",
+    "minimum-stability": "dev",
+    "require": {
+        "rainlab/builder-plugin": "dev-master"
+    }
+}
