@@ -10,11 +10,13 @@ use R4L\Localize\Classes\LocalizationModel;
  */
 class Plugin extends PluginBase
 {
+    public $require = ['RainLab.Builder'];
+
     public function pluginDetails()
     {
         return [
-            'name'        => 'Localize',
-            'description' => 'Allow admins to override Plugin localization files from the backend UI',
+            'name'        => 'r4l.localize::lang.plugin.name',
+            'description' => 'r4l.localize::lang.plugin.description',
             'author'      => 'Marc Jauvin',
             'icon'        => 'icon-language'
         ];
@@ -35,8 +37,8 @@ class Plugin extends PluginBase
     {
         return [
             'r4l.localize.manage_localizations' => [
-                'tab' => 'Localize Plugin',
-                'label' => 'Manage Plugins Localization Files'
+                'tab' => 'r4l.localize::lang.permissions.tab',
+                'label' => 'r4l.localize::lang.permissions.label',
             ],
         ];
     }

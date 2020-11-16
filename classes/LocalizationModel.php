@@ -43,17 +43,21 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $overrideFilePath = $this->getOverrideFilePath();
         $filePath = $this->getFilePath();
 
-        if (!File::isFile($filePath)) {
+        if (!File::isFile($filePath) && !File::isFile($overrideFilePath)) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_cant_load_file'));
         }
 
-        if (!$this->validateFileContents($filePath)) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_bad_localization_file_contents'));
-        }
+        if (File::isFile($filePath)) {
+            if (!$this->validateFileContents($filePath)) {
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_bad_localization_file_contents'));
+            }
+            $strings = include($filePath);
+            if (!is_array($strings)) {
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_file_not_array'));
+            }
 
-        $strings = include($filePath);
-        if (!is_array($strings)) {
-            throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_file_not_array'));
+        } else {
+            $strings = [];
         }
 
         $this->originalStringArray = $strings;
@@ -85,8 +89,10 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $isNew = $this->isNewModel();
 
         if (File::isFile($filePath)) {
-            if ($isNew || $this->originalLanguage != $this->language) {
-                throw new ValidationException(['fileName' => Lang::get('rainlab.builder::lang.common.error_file_exists', ['path'=>$this->language.'/'.basename($filePath)])]);
+            if (!$data) {
+                File::delete($filePath);
+                $this->exists = true;
+                return;
             }
         }
 
@@ -103,13 +109,22 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
         @File::chmod($filePath);
 
-        if (!$this->isNewModel() && strlen($this->originalLanguage) > 0 && $this->originalLanguage != $this->language) {
-            $this->originalFilePath = $this->getFilePath($this->originalLanguage);
-            @File::delete($this->originalFilePath);
-        }
-
         $this->originalLanguage = $this->language;
         $this->exists = true;
+    }
+
+    public function deleteModel()
+    {
+        if ($this->isNewModel()) {
+            throw new ApplicationException('Cannot delete language file which is not saved yet.');
+        }
+
+        $filePath = $this->getOverrideFilePath();
+        if (File::isFile($filePath)) {
+            if (!@File::delete($filePath)) {
+                throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_delete_file'));
+            }
+        }
     }
 
     protected function modelToLanguageFile()
@@ -117,13 +132,16 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $this->strings = trim($this->strings);
 
         if (!strlen($this->strings)) {
-            return "<?php return [\n];";
+            return null;
         }
 
         try {
             $updates = $this->getSanitizedPHPStrings(Yaml::parse($this->strings));
             $changes = array_diff_assoc(array_dot($updates), array_dot($this->originalStringArray));
             $data = array_undot($changes);
+            if (empty($data)) {
+                return null;
+            }
 
             $phpData = var_export($data, true);
             $phpData = preg_replace('/^(\s+)\),/m', '$1],', $phpData);
@@ -140,5 +158,33 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         catch (Exception $ex) {
             throw new ApplicationException(sprintf('Cannot parse the YAML content: %s', $ex->getMessage()));
         }
+    }
+
+    public static function listPluginLanguages($pluginCodeObj)
+    {
+        $result = parent::listPluginLanguages($pluginCodeObj);
+
+        $overrideLanguagesDirectoryPath = File::symbolizePath('~/lang');
+
+        if (!File::isDirectory($overrideLanguagesDirectoryPath)) {
+            return $result;
+        }
+
+        $pluginPath = '/'.$pluginCodeObj->toFilesystemPath();
+
+        foreach (new DirectoryIterator($overrideLanguagesDirectoryPath) as $fileInfo) {
+            if (!$fileInfo->isDir() || $fileInfo->isDot()) {
+                continue;
+            }
+
+            $langFilePath = $fileInfo->getPathname().$pluginPath.'/lang.php';
+
+            $lang = $fileInfo->getFilename();
+            if (File::isFile($langFilePath) && !in_array($lang, $result)) {
+                $result[] = $lang;
+            }
+        }
+
+        return $result;
     }
 }
