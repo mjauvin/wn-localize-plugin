@@ -1,15 +1,14 @@
 <?php namespace R4L\Localize\Widgets;
 
-class PluginList extends \RainLab\Builder\Widgets\PluginList
+class LanguageList extends \RainLab\Builder\Widgets\LanguageList
 {
     public function __construct($controller, $alias)
     {
         parent::__construct($controller, $alias);
 
         $this->viewPath = [
-            $this->viewPath, 
-            '$/rainlab/builder/widgets/pluginlist/partials',
+            $this->viewPath,
+            '$/rainlab/builder/widgets/languagelist/partials',
         ];
-        $this->putSession('filter', 'all');
     }
 }

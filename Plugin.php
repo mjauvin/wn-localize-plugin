@@ -1,90 +1,52 @@
-<?php namespace R4L\LocalizePlugin;
+<?php namespace R4L\Localize;
 
 use Backend;
+use Event;
 use System\Classes\PluginBase;
+use R4L\Localize\Classes\LocalizationModel;
 
 /**
- * LocalizePlugin Plugin Information File
+ * Plugin Information File
  */
 class Plugin extends PluginBase
 {
-    /**
-     * Returns information about this plugin.
-     *
-     * @return array
-     */
     public function pluginDetails()
     {
         return [
-            'name'        => 'LocalizePlugin',
-            'description' => 'No description provided yet...',
-            'author'      => 'R4L',
-            'icon'        => 'icon-leaf'
+            'name'        => 'Localize',
+            'description' => 'Allow admins to override Plugin localization files from the backend UI',
+            'author'      => 'Marc Jauvin',
+            'icon'        => 'icon-language'
         ];
     }
 
-    /**
-     * Register method, called when the plugin is first registered.
-     *
-     * @return void
-     */
-    public function register()
-    {
-
-    }
-
-    /**
-     * Boot method, called right before the request route.
-     *
-     * @return array
-     */
     public function boot()
     {
+        Event::listen('backend.form.extendFieldsBefore', function ($widget) {
+            if (!$widget->model instanceof LocalizationModel) {
+                return;
+            }
 
+            $widget->fields['toolbar']['path'] = '$/r4l/localize/behaviors/indexlocalizationoperations/partials/_toolbar.htm';
+        });
     }
 
-    /**
-     * Registers any front-end components implemented in this plugin.
-     *
-     * @return array
-     */
-    public function registerComponents()
-    {
-        return []; // Remove this line to activate
-
-        return [
-            'R4L\LocalizePlugin\Components\MyComponent' => 'myComponent',
-        ];
-    }
-
-    /**
-     * Registers any back-end permissions used by this plugin.
-     *
-     * @return array
-     */
     public function registerPermissions()
     {
-        return []; // Remove this line to activate
-
         return [
-            'r4l.localizeplugin.some_permission' => [
-                'tab' => 'LocalizePlugin',
-                'label' => 'Some permission'
+            'r4l.localize.manage_localizations' => [
+                'tab' => 'Localize Plugin',
+                'label' => 'Manage Plugins Localization Files'
             ],
         ];
     }
 
-    /**
-     * Registers back-end navigation items for this plugin.
-     *
-     * @return array
-     */
     public function registerNavigation()
     {
         return [
-            'localizeplugin' => [
+            'localize' => [
                 'label'       => 'Localize',
-                'url'         => Backend::url('r4l/localizeplugin'),
+                'url'         => Backend::url('r4l/localize'),
                 'icon'        => 'icon-globe',
                 'order'       => 400,
 
@@ -94,12 +56,11 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-globe',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'localization'],
-                        'permissions' => ['rainlab.builder.manage_plugins']
+                        'permissions' => ['r4l.localize.manage_localizations']
                     ]
                 ]
 
             ]
         ];
     }
-
 }

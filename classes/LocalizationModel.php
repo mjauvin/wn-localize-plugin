@@ -1,4 +1,4 @@
-<?php namespace R4L\LocalizePlugin\Classes;
+<?php namespace R4L\Localize\Classes;
 
 use ApplicationException;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
@@ -64,7 +64,6 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
                 $strings = array_merge($strings, $overrideStrings);
             }
         }
-        debug($strings);
 
         if (count($strings) > 0) {
             $dumper = new YamlDumper();
