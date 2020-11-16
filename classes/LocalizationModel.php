@@ -113,6 +113,10 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $this->exists = true;
     }
 
+    public function initContent()
+    {
+    }
+
     public function deleteModel()
     {
         if ($this->isNewModel()) {
