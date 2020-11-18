@@ -1,21 +1,22 @@
 <?php namespace R4L\Localize\Classes;
 
 use ApplicationException;
+use Config;
+use DirectoryIterator;
+use Exception;
+use File;
+use Lang;
+use RainLab\Builder\Classes\LanguageMixer;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use SystemException;
-use DirectoryIterator;
 use ValidationException;
 use Yaml;
-use Exception;
-use Config;
-use Lang;
-use File;
 
 class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 {
     public $files;
 
-    public $languageFile='lang.php';
+    public $languageFile = null;
 
     public function getOverrideFilePath($language = null)
     {
@@ -73,7 +74,7 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $overrideFilePath = $this->getOverrideFilePath();
         $filePath = $this->getFilePath();
 
-        if (!File::isFile($filePath) && !File::isFile($overrideFilePath)) {
+        if ($this->languageFile && !File::isFile($filePath) && !File::isFile($overrideFilePath)) {
             throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_cant_load_file'));
         }
 
@@ -159,6 +160,20 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
                 throw new ApplicationException(Lang::get('rainlab.builder::lang.localization.error_delete_file'));
             }
         }
+    }
+
+    public function copyStringsFrom($destinationText, $sourceLanguageCode)
+    {
+        $sourceLanguageModel = new self();
+        $sourceLanguageModel->languageFile = $this->languageFile;
+        $sourceLanguageModel->setPluginCodeObj($this->getPluginCodeObj());
+        $sourceLanguageModel->load($sourceLanguageCode);
+
+        $srcArray = $sourceLanguageModel->getOriginalStringsArray();
+
+        $languageMixer = new LanguageMixer();
+
+        return $languageMixer->addStringsFromAnotherLanguage($destinationText, $srcArray);
     }
 
     protected function modelToLanguageFile()

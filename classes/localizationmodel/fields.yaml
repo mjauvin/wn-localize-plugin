@@ -9,9 +9,14 @@ fields:
         attributes:
             spellcheck: 'false'
 
+    languageFile:
+        label: Language File
+        context: create
+        span: right
     files:
         label: r4l.localize::lang.localization.files
         type: dropdown
+        context: update
         placeholder: r4l.localize::lang.localization.select_file
         span: right
     toolbar:
