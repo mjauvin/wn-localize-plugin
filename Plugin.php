@@ -22,17 +22,6 @@ class Plugin extends PluginBase
         ];
     }
 
-    public function boot()
-    {
-        Event::listen('backend.form.extendFieldsBefore', function ($widget) {
-            if (!$widget->model instanceof LocalizationModel) {
-                return;
-            }
-
-            $widget->fields['toolbar']['path'] = '$/r4l/localize/behaviors/indexlocalizationoperations/partials/_toolbar.htm';
-        });
-    }
-
     public function registerPermissions()
     {
         return [

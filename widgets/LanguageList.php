@@ -9,6 +9,8 @@ class LanguageList extends \RainLab\Builder\Widgets\LanguageList
         parent::__construct($controller, $alias);
 
         $this->viewPath = '$/rainlab/builder/widgets/languagelist/partials';
+
+        $this->addJs( url('plugins/r4l/localize/assets/js/select-file.js') );
     }
 
     protected function getLanguageList($pluginCode)

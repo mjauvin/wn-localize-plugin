@@ -13,6 +13,10 @@ use File;
 
 class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 {
+    public $files;
+
+    public $languageFile='lang.php';
+
     public function getOverrideFilePath($language = null)
     {
         if ($language === null) {
@@ -29,16 +33,42 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
             throw new SystemException('Invalid language file name: '.$language);
         }
 
-        $path = '~/lang/'.$language.'/'.$this->getPluginCodeObj()->toFilesystemPath().'/lang.php';
+        $path = '~/lang/'.$language.'/'.$this->getPluginCodeObj()->toFilesystemPath().'/' . $this->languageFile;
 
         return File::symbolizePath($path);
     }
 
+    protected function getFilePath($language = null)
+    {
+        if ($language === null) {
+            $language = $this->language;
+        }
+
+        $language = trim($language);
+
+        if (!strlen($language)) {
+            throw new SystemException('The form model language is not set.');
+        }
+
+        if (!$this->validateLanguage($language)) {
+            throw new SystemException('Invalid language file name: '.$language);
+        }
+
+        $path = $this->getPluginCodeObj()->toPluginDirectoryPath().'/lang/'.$language.'/'.$this->languageFile;
+        return File::symbolizePath($path);
+    }
+
+    public function getFilesOptions()
+    {
+        $path = $this->getPluginCodeObj()->toPluginDirectoryPath().'/lang/'.$this->language;
+        $files = File::files(File::symbolizePath($path));
+
+        return array_map('basename', $files);
+    }
+
     public function load($language)
     {
-        $this->language = $language;
-
-        $this->originalLanguage = $language;
+        $this->language = $this->originalLanguage = $language;
 
         $overrideFilePath = $this->getOverrideFilePath();
         $filePath = $this->getFilePath();

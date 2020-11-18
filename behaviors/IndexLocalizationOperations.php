@@ -18,6 +18,8 @@ use Lang;
  */
 class IndexLocalizationOperations extends \RainLab\Builder\Behaviors\IndexLocalizationOperations
 {
+    protected $baseFormConfigFile = '$/r4l/localize/classes/localizationmodel/fields.yaml';
+
     public function __construct($controller)
     {
         parent::__construct($controller); 
@@ -25,6 +27,63 @@ class IndexLocalizationOperations extends \RainLab\Builder\Behaviors\IndexLocali
             $this->viewPath,
             '$/rainlab/builder/behaviors/indexlocalizationoperations/partials',
         ];
+    }
+
+    public function onLanguageCreateOrOpen()
+    {
+        $language = Input::get('original_language');
+        $pluginCodeObj = $this->getPluginCode();
+
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode()
+        ];
+
+        $widget = $this->makeBaseFormWidget($language, $options);
+
+        $this->vars['originalLanguage'] = $language;
+        $this->vars['languageFile'] = 'lang.php';
+
+        if ($widget->model->isNewModel()) {
+            $widget->model->initContent();
+        }
+
+        $result = [
+            'tabTitle' => $this->getTabName($widget->model),
+            'tabIcon' => 'icon-globe',
+            'tabId' => $this->getTabId($pluginCodeObj->toCode(), $language),
+            'isNewRecord' => $widget->model->isNewModel(),
+            'tab' => $this->makePartial('tab', [
+                'form'  => $widget,
+                'pluginCode' => $pluginCodeObj->toCode(),
+                'language' => $language,
+                'defaultLanguage' => LocalizationModel::getDefaultLanguage()
+            ])
+        ];
+
+        return $result;
+    }
+
+    public function onLanguageGetStrings()
+    {
+        $model = $this->loadOrCreateLocalizationFromPost();
+
+        return ['builderResponseData' => [
+            'strings' => $model ? $model->strings : null
+        ]];
+    }
+
+    protected function loadOrCreateLocalizationFromPost()
+    {
+        $pluginCodeObj = new PluginCode(Request::input('plugin_code'));
+        $languageFile = Input::get('language_file', 'lang.php');
+        $options = [
+            'pluginCode' => $pluginCodeObj->toCode(),
+            'languageFile' => $languageFile,
+        ];
+
+        $originalLanguage = Input::get('original_language');
+
+        return $this->loadOrCreateBaseModel($originalLanguage, $options);
     }
 
     protected function loadOrCreateBaseModel($language, $options = [])
@@ -39,6 +98,7 @@ class IndexLocalizationOperations extends \RainLab\Builder\Behaviors\IndexLocali
             return $model;
         }
 
+        $model->languageFile = array_get($options, 'languageFile', 'lang.php');
         $model->load($language);
         return $model;
     }
