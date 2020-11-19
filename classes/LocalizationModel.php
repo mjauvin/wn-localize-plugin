@@ -1,5 +1,6 @@
 <?php namespace R4L\Localize\Classes;
 
+use AppendIterator;
 use ApplicationException;
 use Config;
 use DirectoryIterator;
@@ -18,7 +19,12 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
     public $languageFile = null;
 
-    public function getOverrideFilePath($language = null)
+    protected function getOverrideLangPath($language)
+    {
+        return File::symbolizePath('~/lang/' . $language . '/' . $this->getPluginCodeObj()->toFilesystemPath());
+    }
+
+    protected function getOverrideFilePath($language = null)
     {
         if ($language === null) {
             $language = $this->language;
@@ -34,9 +40,12 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
             throw new SystemException('Invalid language file name: '.$language);
         }
 
-        $path = '~/lang/'.$language.'/'.$this->getPluginCodeObj()->toFilesystemPath().'/' . $this->languageFile;
+        return $this->getOverrideLangPath($language) . '/' . $this->languageFile;
+    }
 
-        return File::symbolizePath($path);
+    protected function getLangPath($language)
+    {
+        return File::symbolizePath($this->getPluginCodeObj()->toPluginDirectoryPath().'/lang/'.$language);
     }
 
     protected function getFilePath($language = null)
@@ -55,16 +64,17 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
             throw new SystemException('Invalid language file name: '.$language);
         }
 
-        $path = $this->getPluginCodeObj()->toPluginDirectoryPath().'/lang/'.$language.'/'.$this->languageFile;
-        return File::symbolizePath($path);
+        return $this->getLangPath($language) . '/' . $this->languageFile;
     }
 
     public function getFilesOptions()
     {
-        $path = $this->getPluginCodeObj()->toPluginDirectoryPath().'/lang/'.$this->language;
-        $files = File::files(File::symbolizePath($path));
+        $pluginLangPath = $this->getLangPath($this->language);
+        $overrideLangPath = $this->getOverrideLangPath($this->language);
 
-        return array_map('basename', $files);
+        $path = File::isDirectory($pluginLangPath) ? $pluginLangPath : $overrideLangPath;
+
+        return array_map('basename', File::files($path));
     }
 
     public function load($language)
@@ -211,29 +221,37 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
     public static function listPluginLanguages($pluginCodeObj)
     {
-        $result = parent::listPluginLanguages($pluginCodeObj);
-
+        $result = [];
+        $pluginPath = '/'.$pluginCodeObj->toFilesystemPath();
+        $languagesDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/lang');
         $overrideLanguagesDirectoryPath = File::symbolizePath('~/lang');
 
-        if (!File::isDirectory($overrideLanguagesDirectoryPath)) {
-            return $result;
-        }
+        $languagesDirectories = new DirectoryIterator($languagesDirectoryPath);
+        $overridesDirectories = new DirectoryIterator($overrideLanguagesDirectoryPath);
 
-        $pluginPath = '/'.$pluginCodeObj->toFilesystemPath();
+        $directories = new AppendIterator();
+        $directories->append($languagesDirectories);
+        $directories->append($overridesDirectories);
 
-        foreach (new DirectoryIterator($overrideLanguagesDirectoryPath) as $fileInfo) {
+        foreach ($directories as $fileInfo) {
             if (!$fileInfo->isDir() || $fileInfo->isDot()) {
                 continue;
             }
 
-            $langFilePath = $fileInfo->getPathname().$pluginPath.'/lang.php';
+            $files = File::files($fileInfo->getPathname());
+            $langFilesPath = $fileInfo->getPathname() . '/' . $pluginPath;
+
+            if (File::isDirectory($langFilesPath)) {
+                $files = array_merge($files, File::files($langFilesPath));
+            }
 
             $lang = $fileInfo->getFilename();
-            if (File::isFile($langFilePath) && !in_array($lang, $result)) {
+            if ($files && !in_array($lang, $result)) {
                 $result[] = $lang;
             }
         }
 
+        sort($result);
         return $result;
     }
 }
