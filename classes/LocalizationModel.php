@@ -19,6 +19,18 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
     public $languageFile = null;
 
+    protected function purgeEmptyArrays(&$array) {
+        foreach ($array as $key => &$value) {
+            if (is_array($value)) {
+                if (empty($value)) {
+                    $value = null;
+                } else {
+                    $this->purgeEmptyArrays($value);
+                }
+            }
+        }
+    }
+
     protected function getOverrideLangPath($language)
     {
         return File::symbolizePath('~/lang/' . $language . '/' . $this->getPluginCodeObj()->toFilesystemPath());
@@ -101,6 +113,8 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
             $strings = [];
         }
 
+        $this->purgeEmptyArrays($strings);
+
         $this->originalStringArray = $strings;
 
         if (File::isFile($overrideFilePath)) {
@@ -125,17 +139,18 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
     {
         $data = $this->modelToLanguageFile();
         $this->validate();
-
         $filePath = $this->getOverrideFilePath();
+
+        if (!$data) {
+            if (File::isFile($filePath)) {
+                File::delete($filePath);
+            }
+            $this->exists = false;
+            return;
+        }
+
         $isNew = $this->isNewModel();
 
-        if (File::isFile($filePath)) {
-            if (!$data) {
-                File::delete($filePath);
-                $this->exists = true;
-                return;
-            }
-        }
 
         $fileDirectory = dirname($filePath);
         if (!File::isDirectory($fileDirectory)) {
@@ -196,7 +211,12 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
         try {
             $updates = $this->getSanitizedPHPStrings(Yaml::parse($this->strings));
-            $changes = array_diff_assoc(array_dot($updates), array_dot($this->originalStringArray));
+            $this->purgeEmptyArrays($updates);
+
+            $updatesDotted = array_dot($updates);
+            $originalDotted = array_dot($this->originalStringArray);
+
+            $changes = array_diff_assoc($updatesDotted, $originalDotted);
             $data = array_undot($changes);
             if (empty($data)) {
                 return null;
