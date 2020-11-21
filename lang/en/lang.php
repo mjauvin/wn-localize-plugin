@@ -12,7 +12,17 @@ return [
         'confirm_reset' => 'Reset the override language file?',
     ],
     'permissions' => [
-        'tab' => 'Localize Plugin',
-        'label' => 'Manage Plugins Localization Files',
+        'manage_localizations' => [
+            'tab' => 'Localize Plugin',
+            'label' => 'Manage Plugins Localization Files',
+        ],
+        'manage_settings' => [
+            'label' => 'Manage Localization Settings',
+        ],
+    ],
+    'settings' => [
+        'label' => 'Localize',
+        'description' => 'Manage localization settings',
+        'hide_builder' => 'Hide RainLab.Builder Menu',
     ],
 ];

@@ -1,0 +1,5 @@
+fields:
+    hide_builder:
+        type: switch
+        label: 'studioazura.localize::lang.settings.hide_builder'
+        default: true

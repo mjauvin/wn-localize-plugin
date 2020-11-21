@@ -2,8 +2,9 @@
 
 use Backend;
 use Event;
-use System\Classes\PluginBase;
+use StudioAzura\Localize\Models\Settings;
 use StudioAzura\Localize\Classes\LocalizationModel;
+use System\Classes\PluginBase;
 
 /**
  * Plugin Information File
@@ -22,12 +23,24 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function boot()
+    {
+        Event::listen('backend.menu.extendItems', function($manager) {
+            if (Settings::get('hide_builder', true)) {
+                $manager->removeMainMenuItem('RainLab.Builder', 'builder');
+            }
+        });
+    }
+
     public function registerPermissions()
     {
         return [
             'studioazura.localize.manage_localizations' => [
-                'tab' => 'studioazura.localize::lang.permissions.tab',
-                'label' => 'studioazura.localize::lang.permissions.label',
+                'tab' => 'studioazura.localize::lang.permissions.manage_localizations.tab',
+                'label' => 'studioazura.localize::lang.permissions.manage_localizations.label',
+            ],
+            'studioazura.localize.manage_settings' => [
+                'label' => 'studioazura.localize::lang.permissions.manage_settings.label',
             ],
         ];
     }
@@ -38,7 +51,7 @@ class Plugin extends PluginBase
             'localize' => [
                 'label'       => 'Localize',
                 'url'         => Backend::url('studioazura/localize'),
-                'icon'        => 'icon-globe',
+                'icon'        => 'icon-language',
                 'order'       => 400,
 
                 'sideMenu' => [
@@ -54,4 +67,21 @@ class Plugin extends PluginBase
             ]
         ];
     }
+
+    public function registerSettings()
+    {
+        return [
+            'settings' => [
+                'label'       => 'studioazura.localize::lang.settings.label',
+                'description' => 'studioazura.localize::lang.settings.description',
+                'icon'        => 'icon-language',
+                'class'       => 'StudioAzura\Localize\Models\Settings',
+                'keywords'    => 'localize settings config',
+                'order'       => 500,
+                'permissions' => ['studioazura.localize.manage_settings'],
+                'category' => 'system::lang.system.categories.misc',
+              ],
+        ];
+    }
+
 }
