@@ -14,14 +14,14 @@ fields:
         context: create
         span: right
     files:
-        label: r4l.localize::lang.localization.files
+        label: studioazura.localize::lang.localization.files
         type: dropdown
         context: update
-        placeholder: r4l.localize::lang.localization.select_file
+        placeholder: studioazura.localize::lang.localization.select_file
         span: right
     toolbar:
         type: partial
-        path: $/r4l/localize/behaviors/indexlocalizationoperations/partials/_toolbar.htm
+        path: $/studioazura/localize/behaviors/indexlocalizationoperations/partials/_toolbar.htm
         cssClass: collapse-visible
 
 secondaryTabs:

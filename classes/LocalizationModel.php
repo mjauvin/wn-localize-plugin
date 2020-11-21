@@ -1,4 +1,4 @@
-<?php namespace R4L\Localize\Classes;
+<?php namespace StudioAzura\Localize\Classes;
 
 use AppendIterator;
 use ApplicationException;

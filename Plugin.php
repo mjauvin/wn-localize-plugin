@@ -1,9 +1,9 @@
-<?php namespace R4L\Localize;
+<?php namespace StudioAzura\Localize;
 
 use Backend;
 use Event;
 use System\Classes\PluginBase;
-use R4L\Localize\Classes\LocalizationModel;
+use StudioAzura\Localize\Classes\LocalizationModel;
 
 /**
  * Plugin Information File
@@ -15,8 +15,8 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name'        => 'r4l.localize::lang.plugin.name',
-            'description' => 'r4l.localize::lang.plugin.description',
+            'name'        => 'studioazura.localize::lang.plugin.name',
+            'description' => 'studioazura.localize::lang.plugin.description',
             'author'      => 'Marc Jauvin',
             'icon'        => 'icon-language'
         ];
@@ -25,9 +25,9 @@ class Plugin extends PluginBase
     public function registerPermissions()
     {
         return [
-            'r4l.localize.manage_localizations' => [
-                'tab' => 'r4l.localize::lang.permissions.tab',
-                'label' => 'r4l.localize::lang.permissions.label',
+            'studioazura.localize.manage_localizations' => [
+                'tab' => 'studioazura.localize::lang.permissions.tab',
+                'label' => 'studioazura.localize::lang.permissions.label',
             ],
         ];
     }
@@ -37,7 +37,7 @@ class Plugin extends PluginBase
         return [
             'localize' => [
                 'label'       => 'Localize',
-                'url'         => Backend::url('r4l/localize'),
+                'url'         => Backend::url('studioazura/localize'),
                 'icon'        => 'icon-globe',
                 'order'       => 400,
 
@@ -47,7 +47,7 @@ class Plugin extends PluginBase
                         'icon'        => 'icon-globe',
                         'url'         => 'javascript:;',
                         'attributes'  => ['data-menu-item'=>'localization'],
-                        'permissions' => ['r4l.localize.manage_localizations']
+                        'permissions' => ['studioazura.localize.manage_localizations']
                     ]
                 ]
 

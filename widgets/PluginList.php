@@ -1,4 +1,4 @@
-<?php namespace R4L\Localize\Widgets;
+<?php namespace StudioAzura\Localize\Widgets;
 
 class PluginList extends \RainLab\Builder\Widgets\PluginList
 {

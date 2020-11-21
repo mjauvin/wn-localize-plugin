@@ -1,6 +1,6 @@
-<?php namespace R4L\Localize\Widgets;
+<?php namespace StudioAzura\Localize\Widgets;
 
-use R4L\Localize\Classes\LocalizationModel;
+use StudioAzura\Localize\Classes\LocalizationModel;
 
 class LanguageList extends \RainLab\Builder\Widgets\LanguageList
 {
@@ -10,7 +10,7 @@ class LanguageList extends \RainLab\Builder\Widgets\LanguageList
 
         $this->viewPath = '$/rainlab/builder/widgets/languagelist/partials';
 
-        $this->addJs( url('plugins/r4l/localize/assets/js/select-file.js') );
+        $this->addJs( url('plugins/studioazura/localize/assets/js/select-file.js') );
     }
 
     protected function getLanguageList($pluginCode)

@@ -1,6 +1,6 @@
-<?php namespace R4L\Localize\Behaviors;
+<?php namespace StudioAzura\Localize\Behaviors;
 
-use R4L\Localize\Classes\LocalizationModel;
+use StudioAzura\Localize\Classes\LocalizationModel;
 
 use RainLab\Builder\Classes\PluginCode;
 use ApplicationException;
@@ -18,7 +18,7 @@ use Lang;
  */
 class IndexLocalizationOperations extends \RainLab\Builder\Behaviors\IndexLocalizationOperations
 {
-    protected $baseFormConfigFile = '$/r4l/localize/classes/localizationmodel/fields.yaml';
+    protected $baseFormConfigFile = '$/studioazura/localize/classes/localizationmodel/fields.yaml';
 
     public function __construct($controller)
     {
@@ -82,7 +82,7 @@ class IndexLocalizationOperations extends \RainLab\Builder\Behaviors\IndexLocali
         $model = $this->loadOrCreateLocalizationFromPost();
 
         if (!$model->strings) {
-            $model->strings = Lang::get('r4l.localize::lang.localization.select_file');
+            $model->strings = Lang::get('studioazura.localize::lang.localization.select_file');
         }
         return ['builderResponseData' => [
             'strings' => $model ? $model->strings : null
