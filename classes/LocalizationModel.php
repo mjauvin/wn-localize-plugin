@@ -249,12 +249,13 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $languagesDirectoryPath = File::symbolizePath($pluginCodeObj->toPluginDirectoryPath().'/lang');
         $overrideLanguagesDirectoryPath = File::symbolizePath('~/lang');
 
-        $languagesDirectories = new DirectoryIterator($languagesDirectoryPath);
-        $overridesDirectories = new DirectoryIterator($overrideLanguagesDirectoryPath);
-
         $directories = new AppendIterator();
-        $directories->append($languagesDirectories);
-        $directories->append($overridesDirectories);
+        if (File::isDirectory($languagesDirectoryPath)) {
+            $directories->append(new DirectoryIterator($languagesDirectoryPath));
+        }
+        if (File::isDirectory($overrideLanguagesDirectoryPath)) {
+            $directories->append(new DirectoryIterator($overrideLanguagesDirectoryPath));
+        }
 
         foreach ($directories as $fileInfo) {
             if (!$fileInfo->isDir() || $fileInfo->isDot()) {
