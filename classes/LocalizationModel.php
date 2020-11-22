@@ -1,6 +1,5 @@
 <?php namespace StudioAzura\Localize\Classes;
 
-use Arr;
 use AppendIterator;
 use ApplicationException;
 use Config;
@@ -13,8 +12,6 @@ use Symfony\Component\Yaml\Dumper as YamlDumper;
 use SystemException;
 use ValidationException;
 use Yaml;
-
-require_once('Arr.php');
 
 class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 {
@@ -277,5 +274,32 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
         sort($result);
         return $result;
+    }
+}
+
+if (!function_exists('array_undot')) {
+    /**
+     * Transform a dot-notated array into a normal array.
+     *
+     * @param array $dotArray
+     * @return array
+     */
+    function array_undot(array $dotArray)
+    {
+        return Arr::undot($dotArray);
+    }
+
+    class Arr extends \Illuminate\Support\Arr
+    {
+        public static function undot(array $dotArray)
+        {
+            $array = [];
+
+            foreach ($dotArray as $key => $value) {
+                static::set($array, $key, $value);
+            }
+
+            return $array;
+        }
     }
 }
