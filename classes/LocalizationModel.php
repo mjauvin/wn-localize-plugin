@@ -14,6 +14,8 @@ use SystemException;
 use ValidationException;
 use Yaml;
 
+require_once('Arr.php');
+
 class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 {
     public $files;
