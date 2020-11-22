@@ -1,5 +1,7 @@
 <?php namespace StudioAzura\Localize\Classes;
 
+use Illuminate\Support\Arr as ArrHelper;
+		
 if (!function_exists('array_undot')) {
     /**
      * Transform a dot-notated array into a normal array.
@@ -13,7 +15,7 @@ if (!function_exists('array_undot')) {
     }
 }
 
-class Arr extends October\Rain\Support
+class Arr extends ArrHelper
 {
     public static function undot(array $dotArray)
     {
