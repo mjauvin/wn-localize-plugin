@@ -1,5 +1,6 @@
 <?php namespace StudioAzura\Localize\Classes;
 
+use Arr;
 use AppendIterator;
 use ApplicationException;
 use Config;
