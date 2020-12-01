@@ -2,6 +2,7 @@
     "name": "studioazura/localize",
     "type": "october-plugin",
     "description": "Allow admins to override Plugin localization files from the backend UI",
+    "license": "mit",
     "require": {
         "rainlab/builder-plugin": "dev-master"
     }
