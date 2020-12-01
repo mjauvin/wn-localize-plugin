@@ -26,7 +26,7 @@ class Plugin extends PluginBase
     public function register()
     {
         // force sensible umask
-        umask(0022);
+        umask(0002);
     }
 
     public function boot()
