@@ -8,7 +8,7 @@ return [
     'localization' => [
         'select_file' => '-- wähle die Sprachdatei aus --',
         'files' => 'Sprachdateien',
-        'reset' => 'Überschreibungen reseten',
+        'reset' => 'Überschreibungen zurücksetzen',
         'confirm_reset' => 'Die Überschreibung-Sprachdatei zurücksetzen?',
     ],
     'permissions' => [
@@ -21,8 +21,8 @@ return [
         ],
     ],
     'settings' => [
-        'label' => 'Lokalisierung',
-        'description' => 'Verwalte die Lokalisierungseinstellungen',
+        'label' => 'YAMLocalizer',
+        'description' => 'Festlegen von Plugin-Einstellungen',
         'hide_builder' => 'Verstecke den RainLab.Builder Menüeintrag',
     ],
 ];
