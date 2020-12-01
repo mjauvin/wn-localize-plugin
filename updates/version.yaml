@@ -6,3 +6,5 @@
     - allow saving empty files
     - new language files now fully supported
     - multiple permissions fix
+1.0.4:
+    - add hungarian localizations (credit to Lieszkovszky L. L.)
