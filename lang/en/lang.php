@@ -2,7 +2,7 @@
 
 return [
     'plugin' => [
-        'name' => 'Localize',
+        'name' => 'YAMLocalizer',
         'description' => 'Allow admins to override Plugin localization files from the backend UI',
     ],
     'localization' => [
