@@ -148,6 +148,9 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
     public function save()
     {
+        Config::set('cms.defaultMask.file', '0666');
+        Config::set('cms.defaultMask.folder', '0777');
+
         $data = $this->modelToLanguageFile();
         $this->validate();
         $filePath = $this->getOverrideFilePath();
@@ -182,6 +185,9 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
     public function initContent()
     {
+        if (!$this->languageFile) {
+            $this->strings = Lang::get('studioazura.localize::lang.localization.select_file');
+        }
     }
 
     public function deleteModel()
@@ -217,7 +223,7 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $this->strings = trim($this->strings);
 
         if (!strlen($this->strings)) {
-            return null;
+            return "<?php return [\n];";
         }
 
         try {
