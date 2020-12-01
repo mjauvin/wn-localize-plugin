@@ -2,7 +2,7 @@
 
 return [
     'plugin' => [
-        'name' => 'Lokalisierung',
+        'name' => 'YAMLocalizer',
         'description' => 'Erlaubt Admins die Lokalisierungsdateien zu überschreiben direkt aus dem Backend des October CMS.',
     ],
     'localization' => [
