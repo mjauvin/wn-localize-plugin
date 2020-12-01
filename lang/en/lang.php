@@ -21,7 +21,7 @@ return [
         ],
     ],
     'settings' => [
-        'label' => 'Localize',
+        'label' => 'YAMLocalizer',
         'description' => 'Manage localization settings',
         'hide_builder' => 'Hide RainLab.Builder Menu',
     ],
