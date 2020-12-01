@@ -84,9 +84,20 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $pluginLangPath = $this->getLangPath($this->language);
         $overrideLangPath = $this->getOverrideLangPath($this->language);
 
-        $path = File::isDirectory($pluginLangPath) ? $pluginLangPath : $overrideLangPath;
+        $directories = [];
+        if (File::isDirectory($pluginLangPath)) {
+            $directories[] = $pluginLangPath;
+        }
+        if (File::isDirectory($overrideLangPath)) {
+            $directories[] = $overrideLangPath;
+        }
 
-        return array_map('basename', File::files($path));
+        $files = [];
+        foreach ($directories as $dir) {
+            $files = array_merge($files, File::files($dir));
+        }
+
+        return array_unique(array_map('basename', $files));
     }
 
     public function load($language)
