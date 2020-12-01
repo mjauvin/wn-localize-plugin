@@ -8,3 +8,6 @@
     - multiple permissions fix
 1.0.4:
     - add hungarian localizations (credit to Lieszkovszky L. L.)
+1.0.5:
+    - make more strings localizable
+    - add french localizations
