@@ -2,3 +2,7 @@
 1.0.2:
     - add german localizations (credit to Sven Suchan)
     - fixed a few bugs
+1.0.3:
+    - allow saving empty files
+    - new language files now fully supported
+    - multiple permissions fix
