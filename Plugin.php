@@ -23,6 +23,12 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function register()
+    {
+        // force sensible umask
+        umask(0022);
+    }
+
     public function boot()
     {
         Event::listen('backend.menu.extendItems', function($manager) {
