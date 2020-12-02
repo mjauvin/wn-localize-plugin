@@ -19,7 +19,8 @@ class Plugin extends PluginBase
             'name'        => 'studioazura.localize::lang.plugin.name',
             'description' => 'studioazura.localize::lang.plugin.description',
             'author'      => 'Marc Jauvin',
-            'icon'        => 'icon-language'
+            'icon'        => 'icon-language',
+            'iconSvg'     => 'plugins/studioazura/localize/assets/icons/icon.svg',
         ];
     }
 
@@ -58,6 +59,7 @@ class Plugin extends PluginBase
                 'label'       => 'Localize',
                 'url'         => Backend::url('studioazura/localize'),
                 'icon'        => 'icon-language',
+                'iconSvg'     => 'plugins/studioazura/localize/assets/icons/icon.svg',
                 'order'       => 400,
 
                 'sideMenu' => [
