@@ -84,9 +84,20 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $pluginLangPath = $this->getLangPath($this->language);
         $overrideLangPath = $this->getOverrideLangPath($this->language);
 
-        $path = File::isDirectory($pluginLangPath) ? $pluginLangPath : $overrideLangPath;
+        $directories = [];
+        if (File::isDirectory($pluginLangPath)) {
+            $directories[] = $pluginLangPath;
+        }
+        if (File::isDirectory($overrideLangPath)) {
+            $directories[] = $overrideLangPath;
+        }
 
-        return array_map('basename', File::files($path));
+        $files = [];
+        foreach ($directories as $dir) {
+            $files = array_merge($files, File::files($dir));
+        }
+
+        return array_unique(array_map('basename', $files));
     }
 
     public function load($language)
@@ -137,6 +148,9 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
     public function save()
     {
+        Config::set('cms.defaultMask.file', '0666');
+        Config::set('cms.defaultMask.folder', '0777');
+
         $data = $this->modelToLanguageFile();
         $this->validate();
         $filePath = $this->getOverrideFilePath();
@@ -171,6 +185,9 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
 
     public function initContent()
     {
+        if (!$this->languageFile) {
+            $this->strings = Lang::get('studioazura.localize::lang.localization.select_file');
+        }
     }
 
     public function deleteModel()
@@ -206,7 +223,7 @@ class LocalizationModel extends \RainLab\Builder\Classes\LocalizationModel
         $this->strings = trim($this->strings);
 
         if (!strlen($this->strings)) {
-            return null;
+            return "<?php return [\n];";
         }
 
         try {

@@ -8,7 +8,11 @@ class LanguageList extends \RainLab\Builder\Widgets\LanguageList
     {
         parent::__construct($controller, $alias);
 
-        $this->viewPath = '$/rainlab/builder/widgets/languagelist/partials';
+        $this->viewPath = [
+            $this->viewPath,
+            '$/rainlab/builder/widgets/languagelist/partials',
+        ];
+
 
         $this->addJs( url('plugins/studioazura/localize/assets/js/select-file.js') );
     }

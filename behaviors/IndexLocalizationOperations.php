@@ -43,7 +43,7 @@ class IndexLocalizationOperations extends \RainLab\Builder\Behaviors\IndexLocali
         $this->vars['originalLanguage'] = $language;
         $this->vars['languageFile'] = null;
 
-        if ($widget->model->isNewModel()) {
+        if ($widget->model->isNewModel() || !$widget->model->languageFile) {
             $widget->model->initContent();
         }
 
@@ -81,9 +81,14 @@ class IndexLocalizationOperations extends \RainLab\Builder\Behaviors\IndexLocali
     {
         $model = $this->loadOrCreateLocalizationFromPost();
 
-        if (!$model->strings) {
+        if (!$model->languageFile) {
             $model->strings = Lang::get('studioazura.localize::lang.localization.select_file');
         }
+
+        if (!$model->strings) {
+            $model->strings = [];
+        }
+
         return ['builderResponseData' => [
             'strings' => $model ? $model->strings : null
         ]];

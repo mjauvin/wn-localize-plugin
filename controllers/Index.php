@@ -20,7 +20,7 @@ class Index extends \RainLab\Builder\Controllers\Index
         BackendMenu::setContext('StudioAzura.Localize', 'localize', 'localization');
 
         $this->bodyClass = 'compact-container';
-        $this->pageTitle = Lang::get('rainlab.builder::lang.plugin.name');
+        $this->pageTitle = Lang::get('studioazura.localize::lang.plugin.name');
 
         new PluginList($this, 'pluginList');
         new LanguageList($this, 'languageList');

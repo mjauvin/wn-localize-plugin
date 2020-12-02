@@ -4,7 +4,7 @@
 
 fields:
     language:
-        label: rainlab.builder::lang.localization.language
+        label: studioazura.localize::lang.localization.language
         span: left
         attributes:
             spellcheck: 'false'
