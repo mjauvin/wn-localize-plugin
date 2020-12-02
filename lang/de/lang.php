@@ -6,10 +6,12 @@ return [
         'description' => 'Erlaubt Admins die Lokalisierungsdateien zu überschreiben direkt aus dem Backend des October CMS.',
     ],
     'localization' => [
-        'select_file' => '-- wähle die Sprachdatei aus --',
-        'files' => 'Sprachdateien',
-        'reset' => 'Überschreibungen zurücksetzen',
+        'add_missing_strings' => 'Füge fehlende Strings ein',
         'confirm_reset' => 'Die Überschreibung-Sprachdatei zurücksetzen?',
+        'files' => 'Sprachdateien',
+        'language' => 'Sprache',
+        'reset' => 'Überschreibungen zurücksetzen',
+        'select_file' => '-- wähle die Sprachdatei aus --',
     ],
     'permissions' => [
         'manage_localizations' => [
