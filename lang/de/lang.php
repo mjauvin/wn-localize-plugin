@@ -13,6 +13,10 @@ return [
         'reset' => 'Überschreibungen zurücksetzen',
         'select_file' => '-- wähle die Sprachdatei aus --',
     ],
+    'languagelist' => [
+        'add' => 'Hinzufügen',
+        'search' => 'Suchen',
+    ],
     'permissions' => [
         'manage_localizations' => [
             'tab' => 'Lokaliserung Plugin',
