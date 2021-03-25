@@ -10,6 +10,7 @@ class LanguageList extends \RainLab\Builder\Widgets\LanguageList
 
         $this->viewPath = [
             $this->viewPath,
+            '$/winter/builder/widgets/languagelist/partials',
             '$/rainlab/builder/widgets/languagelist/partials',
         ];
 

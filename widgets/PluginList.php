@@ -8,6 +8,7 @@ class PluginList extends \RainLab\Builder\Widgets\PluginList
 
         $this->viewPath = [
             $this->viewPath, 
+            '$/winter/builder/widgets/pluginlist/partials',
             '$/rainlab/builder/widgets/pluginlist/partials',
         ];
         $this->putSession('filter', 'all');
