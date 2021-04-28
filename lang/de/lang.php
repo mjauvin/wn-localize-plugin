@@ -3,7 +3,7 @@
 return [
     'plugin' => [
         'name' => 'YAMLocalizer',
-        'description' => 'Erlaubt Admins die Lokalisierungsdateien zu überschreiben direkt aus dem Backend des October CMS.',
+        'description' => 'Erlaubt Admins die Lokalisierungsdateien zu überschreiben direkt aus dem Backend des Winter CMS.',
     ],
     'localization' => [
         'add_missing_strings' => 'Füge fehlende Strings ein',
