@@ -28,6 +28,8 @@ class Plugin extends PluginBase
     {
         // force sensible umask
         umask(0002);
+
+        $this->registerConsoleCommand('winter.lang', 'StudioAzura\Localize\Console\WinterLang');
     }
 
     public function boot()

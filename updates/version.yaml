@@ -11,3 +11,4 @@
 1.0.5:
     - make more strings localizable
     - add french localizations
+1.0.6: add winter:lang console command
