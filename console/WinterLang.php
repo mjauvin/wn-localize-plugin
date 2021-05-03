@@ -100,11 +100,12 @@ class WinterLang extends Command
             $phpData = preg_replace('/^\)\Z/m', ']', $phpData);
 
             // safely remove single quotes around added double quotes
-            $phpData = preg_replace('/\'"/', '"', $phpData);
-            $phpData = preg_replace('/"\'/', '"', $phpData);
+            $phpData = preg_replace('/\'(".+")\'/', "$1", $phpData);
 
-            // remove escaped single quotes because they have been double quoted
-            $phpData = preg_replace("/\\\'/", "'", $phpData);
+            // remove escaped single quotes within double quotes
+            $phpData = preg_replace_callback('/("[^"]+",)/', function ($matches) {
+                return str_replace("\\'", "'", $matches[1]);
+            }, $phpData);
 
             return "<?php return ".$phpData.";";
         }
@@ -121,8 +122,8 @@ class WinterLang extends Command
             }
 
             $unquotedItem = trim($item, "'");
-            // replace single quotes around the string if single quotes are found inside.
-            if (strpos($unquotedItem, "'") !== false) {
+            // replace single quotes around the string if single quotes are found inside and no double quotes found inside.
+            if (strpos($unquotedItem, "'") !== false && strpos($unquotedItem, '"') === false) {
                 $item = '"' . $unquotedItem . '"';
             }
         });
